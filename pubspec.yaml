@@ -1,0 +1,8 @@
+name: web_http
+description: A web http client focused on speed and correctness.
+version: 0.0.1
+#homepage: https://www.example.com
+author: Jonah Williams <jonahwilliams@google.com>
+
+environment:
+  sdk: '>=1.20.1 <2.0.0'
