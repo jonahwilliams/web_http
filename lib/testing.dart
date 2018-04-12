@@ -15,33 +15,12 @@ typedef FutureOr<TestHttpResponse> TestClientCallback(String url, String method,
 ///
 /// The exact responses returned can be controlled with the provided
 /// [callback].
-class TestHttpClient implements HttpClient {
+class TestHttpClient extends HttpClient {
   final TestClientCallback callback;
 
   /// Creates a new [TestHttpClient].
   TestHttpClient(this.callback) {
     _throwOnProductionMode();
-  }
-
-  @override
-  Stream<String> get(String url,
-      {Map<String, String> headers, int timeout, bool withCredentials}) {
-    return request(url, 'GET',
-            headers: headers,
-            timeout: timeout,
-            withCredentials: withCredentials)
-        .map((HttpResponse response) => response.body as String);
-  }
-
-  @override
-  Stream<String> post(String url, String body,
-      {Map<String, String> headers, int timeout, bool withCredentials}) {
-    return request(url, 'POST',
-            body: body,
-            headers: headers,
-            timeout: timeout,
-            withCredentials: withCredentials)
-        .map((HttpResponse response) => response.body as String);
   }
 
   @override
