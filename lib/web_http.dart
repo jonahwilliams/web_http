@@ -53,7 +53,7 @@ class HttpClient {
     bool withCredentials,
   }) {
     return request(url, 'GET', headers: headers, timeout: timeout)
-        .map((HttpResponse response) => response.body);
+        .map((HttpResponse response) => response.body as String);
   }
 
   /// A convience wrapper around [request] which sends a POST request.
@@ -69,19 +69,27 @@ class HttpClient {
     bool withCredentials,
   }) {
     return request(url, 'POST', headers: headers, timeout: timeout)
-        .map((HttpResponse response) => response.body);
+        .map((HttpResponse response) => response.body as String);
   }
 
   /// Sends an HTTP request to a specified domain.
   ///
   ///  * [url] is the string encoded url.
   ///  * [method] is an http verb such as 'GET' or 'POST'.
+  ///  * [responseType] is the expected server response type. Valid values are
+  ///    'arraybuffer', 'blob',  'document', 'json', or 'text'. Defaults to
+  ///    'text' if not set.
   ///  * [body] is the (optional) request body.
   ///  * [headers] are the (optional) request headers.
   ///  * [timeout] is an (optional) time limit in milliseconds before aborting
   ///    the request automatically.
   ///  * [withCredentials] whether cross-site requests should use cookie or
   ///    header credentials.
+  /// 
+  /// See also:
+  /// 
+  ///  * [HttpRequest.responseType], for more information on the return type
+  ///    for each [responseType].
   Stream<HttpResponse> request(
     String url,
     String method, {
@@ -173,7 +181,7 @@ class HttpResponse {
   /// The body of the response.
   ///
   /// Depending on the respond type requested, might be a [String], [Document],
-  /// or a buffer.
+  /// or a [ByteBuffer].
   final dynamic body;
 
   /// response headers.

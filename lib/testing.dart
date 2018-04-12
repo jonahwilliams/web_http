@@ -12,8 +12,8 @@ typedef FutureOr<TestHttpResponse> TestClientCallback(String url, String method,
     bool withCredentials});
 
 /// A testing implementation of [HttpClient].
-/// 
-/// The exact responses returned can be controlled with the provided 
+///
+/// The exact responses returned can be controlled with the provided
 /// [callback].
 class TestHttpClient implements HttpClient {
   final TestClientCallback callback;
@@ -62,7 +62,7 @@ class TestHttpClient implements HttpClient {
             timeout: timeout,
             withCredentials: withCredentials,
           );
-          if (response is TestHttpResponse) {
+          new Future.value(response).then((TestHttpResponse response) {
             if (response.statusCode >= 200 && response.statusCode < 300) {
               controller.add(response);
               controller.close();
@@ -71,18 +71,7 @@ class TestHttpClient implements HttpClient {
                   new HttpException('test exception', response.statusCode));
               controller.close();
             }
-          } else {
-            (response as Future<TestHttpResponse>).then((response) {
-              if (response.statusCode >= 200 && response.statusCode < 300) {
-                controller.add(response);
-                controller.close();
-              } else {
-                controller.addError(
-                    new HttpException('test exception', response.statusCode));
-                controller.close();
-              }
-            });
-          }
+          });
         });
     return controller.stream;
   }
@@ -114,7 +103,7 @@ class TestHttpResponse implements HttpResponse {
   final Map<String, String> headers;
 
   /// The status code of the HTTP response.
-  /// 
+  ///
   /// Non 2XX status code will cause the [TestHttpClient] to return an
   /// [HttpException].
   final int statusCode;
@@ -124,9 +113,7 @@ class TestHttpResponse implements HttpResponse {
 /// [TestHttpResponse] classes are created in production mode.
 void _throwOnProductionMode() {
   bool inProductionMode = true;
-  assert(() {
-    inProductionMode = false;
-  }());
+  assert(inProductionMode = false);
   if (inProductionMode)
     throw new UnsupportedError(
         'Cannot use TestHttpClient or TestHttpResponse in production mode');
